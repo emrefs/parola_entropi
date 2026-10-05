@@ -1,4 +1,5 @@
 import * as E from './engine.js';
+import { createAnalyzer } from './analyzer.js';
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => {
@@ -36,11 +37,33 @@ function approxGuesses(bits) {
 }
 
 // ---------- Hesap ----------
-function compute() {
+const personalInputs = () => $('personal').value.split(/[,;\s]+/).filter(Boolean);
+
+// Desen analizi Worker'da yapılır. Aynı anda tek istek gönderilir; yanıt gelene kadar yazılanlar
+// için yalnızca en sonuncusu sorulur, böylece hızlı yazarken kuyruk birikmez.
+const analysis = { key: null, value: null, failed: false, inFlight: false, busySince: 0 };
+let analyzer = null;
+const analysisKey = (password, personal) => `${password}\u0000${personal.join('\u0001')}`;
+function requestAnalysis() {
+  if (analysis.inFlight || !analyzer) return;
+  const password = pw.value;
+  const personal = personalInputs();
+  const key = analysisKey(password, personal);
+  if (!password || key === analysis.key) return;
+  analysis.inFlight = true;
+  analysis.busySince = performance.now();
+  analyzer.analyze(password, personal).then(
+    (value) => Object.assign(analysis, { key, value, failed: false }),
+    () => Object.assign(analysis, { key, value: null, failed: true }),
+  ).finally(() => {
+    analysis.inFlight = false;
+    render();
+  });
+}
+
+function compute(pattern) {
   const password = pw.value;
   if (!password) return null;
-  const personal = $('personal').value.split(/[,;\s]+/).filter(Boolean);
-  const pattern = E.patternAnalysis(password, personal);
   const m = mode();
   const out = { password, mode: m, pattern, warnings: [], needsInput: null };
 
@@ -176,8 +199,19 @@ function render() {
   $('opts-chars').hidden = mode() !== 'chars';
   $('opts-words').hidden = mode() !== 'words';
 
-  const r = compute();
+  // Bu parolanın analizi henüz gelmediyse iste ve önceki sonucu soluk göstererek bekle.
   const result = $('result');
+  const pending = !!password && analysis.key !== analysisKey(password, personalInputs());
+  result.setAttribute('aria-busy', String(pending));
+  if (pending) {
+    requestAnalysis();
+    renderBreach();
+    return;
+  }
+
+  const r = analysis.failed && password
+    ? { needsInput: 'Desen analizi yapılamadı. Sayfayı yenileyip yeniden deneyin.' }
+    : compute(analysis.value);
   const has = !!(r && r.bits !== undefined);
   result.classList.toggle('empty', !has);
   $('details-block').hidden = !has;
@@ -248,7 +282,7 @@ $('breach-btn').addEventListener('click', async () => {
   render();
 });
 
-// Sözlükleri ilk boyamadan sonra hazırla
+// Sürüm bilgisi; ardından ilk boyama ve sözlüklerin (Worker'da) hazırlanması
 const v = __VERSIONS__;
 $('versions').textContent = `parola_entropi ${v.app}. zxcvbn-ts ${v.core}; sözlükler: ortak ${v.common}, İngilizce ${v.en}, Türkçe ${v.tr}. Derleme: ${v.built}${v.commit ? `, ${v.commit}` : ''}. `;
 if (v.repo) {
@@ -258,8 +292,10 @@ if (v.repo) {
   $('versions').append(a);
 }
 render();
-setTimeout(() => {
-  E.init();
+analyzer = createAnalyzer(() => {
+  // Testler ve hata ayıklama için: analiz Worker'da mı ("worker") sayfada mı ("local")?
+  document.documentElement.dataset.analyzer = analyzer.mode;
   $('loading').hidden = true;
   pw.focus();
-}, 0);
+});
+requestAnalysis();

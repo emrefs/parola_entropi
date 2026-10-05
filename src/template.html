@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src '__CSP_HASH__'; style-src 'unsafe-inline'; connect-src https://api.pwnedpasswords.com; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src '__CSP_HASH__'; style-src 'unsafe-inline'; connect-src https://api.pwnedpasswords.com; worker-src blob:; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>parola_entropi</title>
@@ -83,6 +83,9 @@ details .inner { margin-top: .6rem; }
 /* Kesit: parolanın parçaları, genişlik katkıyla orantılı */
 .strata { display: flex; min-height: 4rem; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; background: var(--surface); }
 .result.empty .strata { background: repeating-linear-gradient(135deg, transparent 0 9px, var(--rule) 9px 10px); opacity: .6; }
+/* Analiz sürerken önceki sonuç soluklaşır; kısa hesaplarda titreme olmasın diye gecikmeli */
+.result { transition: opacity .15s; }
+.result[aria-busy="true"] { opacity: .45; transition-delay: .25s; }
 .seg { flex: 1 1 0; min-width: 2.2rem; display: flex; align-items: center; justify-content: center; padding: .5rem .4rem; border-bottom: 6px solid; overflow: hidden; transition: flex-grow .2s ease; }
 .seg + .seg { border-left: 1px solid var(--surface); }
 .seg-text { font-family: var(--mono); font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

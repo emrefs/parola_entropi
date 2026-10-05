@@ -23,7 +23,7 @@ const versions = {
 };
 
 const out = await build({
-  entryPoints: [path.join(root, 'src', 'ui.js')],
+  entryPoints: [path.join(root, 'src', 'main.js')],
   bundle: true, format: 'iife', minify: true, charset: 'utf8', target: 'es2020',
   write: false, legalComments: 'none', metafile: true,
   define: { __VERSIONS__: JSON.stringify(versions) },
