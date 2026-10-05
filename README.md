@@ -33,6 +33,9 @@ dosyasını indirip tarayıcıda açın. Dosya kendi kendine yeter; kurulum gere
   basınca yapılır ve parolanın SHA-1 özetinin yalnızca ilk 5 karakterini içerir
   (k-anonimlik).
 - Gömülü betiğin SHA-256 özeti CSP'ye yazılır; betik değiştirilirse tarayıcı çalıştırmaz.
+- Desen analizi, sayfa donmasın diye bir Web Worker'da yapılır. Worker, gömülü betiğin
+  kendisinden yerel bir `blob:` adresiyle üretilir (CSP'de `worker-src blob:`); ağa istek
+  yapmaz. Worker açılamayan tarayıcılarda analiz sayfanın kendisinde yapılır.
 - GitHub Actions ile derlenen sürümün altbilgisinde, sayfanın üretildiği commit görünür.
 
 ## Sınırlar
@@ -61,6 +64,7 @@ Node.js 22 ile test edilmiştir.
 | `src/keyboards.js` | Türkçe Q ve F klavye komşuluk tabloları ve üreteci |
 | `src/tr-extra.js` | Elle derlenmiş Türkçe ek sözlükler |
 | `src/ui.js`, `src/template.html` | Arayüz, sayfa iskeleti ve stiller |
+| `src/main.js`, `src/analyzer.js` | Giriş noktası; desen analizini Web Worker'da çalıştırır, Worker yoksa sayfada |
 | `build.mjs` | Her şeyi tek HTML dosyasında birleştirir, CSP özetini ve lisans bildirimlerini yazar |
 | `tests/` | Birim testleri (`test.mjs`) ve tarayıcı testleri (`e2e.py`) |
 

@@ -24,9 +24,12 @@ with sync_playwright() as p:
     pg.on("request", lambda r: reqs.append(r.url))
     pg.goto(URL); pg.wait_for_selector("#loading", state="hidden")
     t = lambda sel: pg.inner_text(sel).strip()
+    # Desen analizi Worker'da eşzamansız yapılır; yazdıktan sonra sonucun gelmesini bekle.
+    idle = lambda page: page.wait_for_selector("#result:not([aria-busy=true])", state="attached")
     def typ(v):
-        pg.fill("#pw", v); pg.wait_for_timeout(220)
+        pg.fill("#pw", v); pg.wait_for_timeout(220); idle(pg)
 
+    check("analiz Web Worker'da", pg.evaluate("document.documentElement.dataset.analyzer") == "worker", pg.evaluate("document.documentElement.dataset.analyzer"))
     check("boş durum metni", "Bir parola yazın" in t("#explain"))
     check("ara düğmesi boşken kapalı", pg.is_disabled("#breach-btn"))
 
@@ -74,11 +77,35 @@ with sync_playwright() as p:
 
     # kişisel bilgi
     pg.check("input[value=human]"); typ("korkutalp"); before = t("#bits")
-    pg.click("summary >> text=Kişisel"); pg.fill("#personal", "Korkutalp, 1990"); pg.wait_for_timeout(220)
+    pg.click("summary >> text=Kişisel"); pg.fill("#personal", "Korkutalp, 1990"); pg.wait_for_timeout(220); idle(pg)
     check("kişisel bilgi değeri düşürür", t("#bits") != before and "Kişisel bilgi" in t("#parts-body"), f"{before} -> {t('#bits')}")
-    pg.fill("#personal", "")
+    typ("zirvex1990"); pg.fill("#personal", "ZİRVEX"); pg.wait_for_timeout(220); idle(pg)
+    check("kişisel bilgide Türkçe İ", "Kişisel bilgi" in t("#parts-body"), t("#parts-body"))
+    pg.fill("#personal", ""); pg.wait_for_timeout(220); idle(pg)
 
-    check("şu ana kadar ağ isteği yok", all(u.startswith("file:") for u in reqs), [u for u in reqs if not u.startswith("file:")])
+    # Uzun parola: analiz sürerken sayfa donmamalı, sonuç doğru parolaya ait olmalı
+    long_pw = "kV9#tLq2@Wz7!mRd" * 6
+    gap = pg.evaluate("""(pw) => new Promise((done) => {
+        const el = document.getElementById('pw');
+        el.value = pw; el.dispatchEvent(new Event('input'));
+        let last = performance.now(), worst = 0;
+        const tick = () => {
+            const now = performance.now(); worst = Math.max(worst, now - last); last = now;
+            if (document.getElementById('result').getAttribute('aria-busy') === 'true' || now - start < 400) setTimeout(tick, 10);
+            else done(Math.round(worst));
+        };
+        const start = performance.now(); setTimeout(tick, 10);
+    })""", long_pw)
+    check("96 karakterlik parolada sayfa donmuyor", gap < 150, f"en uzun bekleme {gap} ms")
+    check("uzun parolada sonuç yeni parolaya ait", t("#parts-body") != "" and pg.locator("#strata .seg").count() >= 1)
+    # Hızlı yazma: ara değerler atlanabilir ama son sonuç son parolaya ait olmalı
+    for k in range(1, 12): pg.fill("#pw", "kalemdefter"[:k])
+    pg.wait_for_timeout(220); idle(pg)
+    check("hızlı yazmada son sonuç doğru", t("#bits") == "26,9 bit", t("#bits"))
+
+    # blob: Worker'ın sayfanın kendi betiğinden üretilen yerel adresidir; ağa çıkmaz.
+    local = lambda u: u.startswith("file:") or u.startswith("blob:")
+    check("şu ana kadar ağ isteği yok", all(local(u) for u in reqs), [u for u in reqs if not local(u)])
 
     # HIBP: sahte yanıt
     typ("Tr0ub4dor&3"); base = t("#bits")
@@ -115,7 +142,7 @@ with sync_playwright() as p:
     check("CSP ihlali konsola yazıldı", any("Content Security Policy" in l and "example.com" in l for l in logs))
     bad = [l for l in logs if ("error" in l.lower()) and "example.com" not in l and "pwnedpasswords" not in l and "ERR_FAILED" not in l]
     check("konsol hatası yok", not bad, bad[:3])
-    other = [u for u in reqs if not u.startswith("file:") and "api.pwnedpasswords.com/range/" not in u and "example.com" not in u]
+    other = [u for u in reqs if not local(u) and "api.pwnedpasswords.com/range/" not in u and "example.com" not in u]
     check("beklenmeyen ağ isteği yok", not other, other)
     stored = pg.evaluate("[localStorage.length, sessionStorage.length, document.cookie]")
     check("açık kaynak bildirimleri sayfada", "OpenSubtitles" in pg.text_content("#notices") and "Dropbox" in pg.text_content("#notices") and pg.text_content("#notices").lstrip("=\n").startswith("parola_entropi") and "MIT License" in pg.text_content("#notices"))
@@ -123,10 +150,19 @@ with sync_playwright() as p:
 
     # koyu tema ve mobil
     d = b.new_context(viewport={"width": 390, "height": 900}, color_scheme="dark", locale="tr-TR").new_page()
-    d.goto(URL); d.wait_for_selector("#loading", state="hidden"); d.fill("#pw", "mehmetyilmaz1985"); d.click("#toggle"); d.wait_for_timeout(250)
+    d.goto(URL); d.wait_for_selector("#loading", state="hidden"); d.fill("#pw", "mehmetyilmaz1985"); d.click("#toggle"); d.wait_for_timeout(250); idle(d)
     w = d.evaluate("[document.documentElement.scrollWidth, window.innerWidth]")
     check("mobilde yatay taşma yok", w[0] <= w[1], w)
     shot(d, "shot-mobile-dark.png")
+
+    # Worker kullanılamayan tarayıcı: analiz sayfada yapılmalı, sonuç aynı olmalı
+    nw_ctx = b.new_context(locale="tr-TR"); nw_ctx.add_init_script("delete window.Worker")
+    nw = nw_ctx.new_page(); nw_logs = []
+    nw.on("pageerror", lambda e: nw_logs.append(str(e)))
+    nw.goto(URL); nw.wait_for_selector("#loading", state="hidden")
+    nw.fill("#pw", "kalemdefter"); nw.wait_for_timeout(220); idle(nw)
+    check("Worker yoksa sayfada hesaplanıyor", nw.evaluate("document.documentElement.dataset.analyzer") == "local" and nw.inner_text("#bits").strip() == "26,9 bit", nw.inner_text("#bits"))
+    check("Worker yokken sayfa hatası yok", not nw_logs, nw_logs[:2])
     b.close()
 print("\nBAŞARISIZ:", fails if fails else "yok")
 sys.exit(1 if fails else 0)

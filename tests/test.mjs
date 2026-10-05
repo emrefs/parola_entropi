@@ -88,8 +88,15 @@ const plain = E.createFactory({ extras: false });
 assert.equal(E.patternAnalysis('kV9#tLq2@Wz7!mRd', [], plain).bits, b('kV9#tLq2@Wz7!mRd'));
 console.log('kişisel bilgi: korkutalp', b('korkutalp').toFixed(1), '->', b('korkutalp', ['Korkutalp']).toFixed(1), '| emre1990ankara', b('emre1990ankara').toFixed(1), '->', b('emre1990ankara', ['Emre','Ankara',1990]).toFixed(1));
 assert.ok(b('korkutalp', ['Korkutalp']) < b('korkutalp') - 5, 'kişisel bilgi');
+// Kişisel bilgilerde Türkçe İ/I ve Türkçe karaktersiz yazım
+for (const [p, ui] of [['zirvex1990', ['ZİRVEX']], ['zirvex1990', ['Zİrvex']], ['zırvax1990', ['ZIRVAX']], ['ZIRVAX1990', ['zırvax']], ['zirvax1990', ['Zırvax']]]) {
+  assert.ok(b(p, ui) < b(p) - 5, `kişisel bilgi (Türkçe harf): ${p} / ${ui}`);
+}
 const seg = E.patternAnalysis('İSTANBUL34').segments;
 assert.equal(seg.map(s => s.text).join(''), 'İSTANBUL34');
+// 256 karakterden uzun parolada parçalar yine parolanın tamamını kapsamalı
+const longPw = 'kV9#tLq2@Wz7!mRd'.repeat(17);
+assert.equal(E.patternAnalysis(longPw).segments.map(s => s.text).join(''), longPw);
 
 // Rastgele parolalarda yanlış "desenli görünüyor" uyarısı oranı
 const sets = { lower: 'abcdefghijklmnopqrstuvwxyz', alnum: 'abcdefghijklmnopqrstuvwxyz0123456789', full: Array.from({length:94},(_,i)=>String.fromCharCode(33+i)).join('') };

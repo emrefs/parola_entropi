@@ -113,16 +113,34 @@ export function describeMatch(m) {
 }
 
 // ---------- Desen analizi (zxcvbn) ----------
+// zxcvbn kişisel bilgileri toLowerCase() ile küçültür: "İsmail" "i̇smail", "IŞIK" "işik" olur
+// ve parolayla eşleşmez. Her girdinin Türkçe küçük harfli ve Türkçe karaktersiz yazımları da
+// eklenir. Asıl girdiler başta kalır, böylece sıraları (rank) değişmez.
+export function expandUserInputs(userInputs) {
+  const out = [];
+  const add = (w) => { if (w && !out.includes(w)) out.push(w); };
+  for (const raw of userInputs) add(String(raw));
+  for (const raw of userInputs) {
+    const s = String(raw);
+    for (const v of [s.replace(/İ/g, 'I').toLowerCase(), s.toLocaleLowerCase('tr-TR')]) {
+      add(v);
+      add(foldTr(v));
+    }
+  }
+  return out;
+}
+
 // JavaScript'in küçük harfe çevirmesi Türkçe İ/I harflerini doğru işlemez; bu yüzden
 // parolanın iki yazımı denenir ve saldırgan için daha kolay olanı (az tahmin) alınır.
 export function patternAnalysis(password, userInputs = [], engine = null) {
   init();
   const zx = engine || factory;
+  const inputs = expandUserInputs(userInputs);
   const variants = [password.replace(/İ/g, 'I')];
   if (/[Iİ]/.test(password)) variants.push(password.replace(/İ/g, 'i').replace(/I/g, 'ı'));
   let best = null;
   for (const v of variants) {
-    const r = zx.check(v, userInputs);
+    const r = zx.check(v, inputs);
     if (!best || r.guessesLog10 < best.guessesLog10) best = r;
   }
   const segments = best.sequence.map((m) => ({
@@ -132,6 +150,19 @@ export function patternAnalysis(password, userInputs = [], engine = null) {
     bits: Math.log2(Math.max(1, m.guesses)),
     ...describeMatch(m),
   }));
+  // zxcvbn yalnızca ilk maxLength (256) karakteri inceler. Kalan kısım tahmine katkı
+  // vermez (sonuç olduğundan düşük çıkar), ama tabloda görünmesi için ayrı parça olarak eklenir.
+  const analyzed = best.password.length;
+  if (analyzed < password.length) {
+    segments.push({
+      i: analyzed,
+      j: password.length - 1,
+      text: password.slice(analyzed),
+      bits: 0,
+      kind: 'none',
+      label: `İncelenmedi (ilk ${analyzed} karakterden sonrası)`,
+    });
+  }
   return { bits: best.guessesLog10 * LOG2_10, segments };
 }
 
