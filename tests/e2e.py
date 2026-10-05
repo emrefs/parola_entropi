@@ -1,4 +1,4 @@
-import hashlib, os, sys
+import hashlib, os, re, sys
 from playwright.sync_api import sync_playwright
 import pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -16,7 +16,7 @@ def check(name, cond, extra=""):
 
 with sync_playwright() as p:
     b = p.chromium.launch()
-    ctx = b.new_context(viewport={"width": 900, "height": 1100}, locale="tr-TR")
+    ctx = b.new_context(viewport={"width": 900, "height": 1100}, locale="tr-TR", permissions=["clipboard-read", "clipboard-write"])
     pg = ctx.new_page()
     logs, reqs = [], []
     pg.on("console", lambda m: logs.append(f"{m.type}: {m.text}"))
@@ -54,7 +54,7 @@ with sync_playwright() as p:
     typ("<img src=x onerror=alert(1)>"); check("HTML enjeksiyonu yok", pg.locator("#strata img, #parts-body img").count() == 0)
 
     # rastgele karakter kipi
-    typ("kV9#tLq2@Wz7!mRd"); pg.check("input[value=chars]"); pg.wait_for_timeout(100)
+    typ("kV9#tLq2@Wz7!mRd"); pg.check("input[name=mode][value=chars]"); pg.wait_for_timeout(100)
     check("rastgele 16 kr = 104,9 bit", t("#bits") == "104,9 bit", t("#bits"))
     check("havuz ipucu 94", "Otomatik: 94" in t("#pool-hint"), t("#pool-hint"))
     check("büyük deneme sayısı biçimi", t("#guesses").replace("\n","") == "yaklaşık 4 × 1031 deneme", t("#guesses"))
@@ -69,14 +69,14 @@ with sync_playwright() as p:
     typ("şğüöçı"); check("ASCII dışı: havuz istenir", "Havuz boyutunu girin" in t("#explain"), t("#explain"))
 
     # rastgele kelime kipi
-    pg.check("input[value=words]"); typ("correct-horse-battery-staple")
+    pg.check("input[name=mode][value=words]"); typ("correct-horse-battery-staple")
     check("4 kelime x 7776 = 51,7 bit", t("#bits") == "51,7 bit", t("#bits"))
     typ("axlesalludedturkeysecond"); check("ayraçsız: sayı istenir", "Kelime sayısını girin" in t("#explain"))
     pg.fill("#words", "4"); pg.fill("#listsize", "17576"); pg.wait_for_timeout(220)
     check("4 x 17576 = 56,4 bit", t("#bits") == "56,4 bit", t("#bits"))
 
     # kişisel bilgi
-    pg.check("input[value=human]"); typ("korkutalp"); before = t("#bits")
+    pg.check("input[name=mode][value=human]"); typ("korkutalp"); before = t("#bits")
     pg.click("summary >> text=Kişisel"); pg.fill("#personal", "Korkutalp, 1990"); pg.wait_for_timeout(220); idle(pg)
     check("kişisel bilgi değeri düşürür", t("#bits") != before and "Kişisel bilgi" in t("#parts-body"), f"{before} -> {t('#bits')}")
     typ("zirvex1990"); pg.fill("#personal", "ZİRVEX"); pg.wait_for_timeout(220); idle(pg)
@@ -102,6 +102,38 @@ with sync_playwright() as p:
     for k in range(1, 12): pg.fill("#pw", "kalemdefter"[:k])
     pg.wait_for_timeout(220); idle(pg)
     check("hızlı yazmada son sonuç doğru", t("#bits") == "26,9 bit", t("#bits"))
+
+    # parola oluşturucu
+    check("oluşturucu sekmesi başta gizli", pg.is_hidden("#panel-gen") and pg.is_visible("#panel-meter"))
+    pg.click("#tab-gen")
+    check("sekme geçişi", pg.is_visible("#panel-gen") and pg.is_hidden("#panel-meter") and pg.get_attribute("#tab-gen", "aria-selected") == "true")
+    first = t("#gen-pw")
+    check("akılda kalır parola biçimi", bool(re.fullmatch(r"[A-Z][a-z]{3,7}\d(-[A-Z][a-z]{3,7}\d){4}", first)), first)
+    check("entropi ve etiket", t("#gen-meta").startswith("71,6 bit") and "Güçlü" in t("#gen-meta"), t("#gen-meta"))
+    check("6 öneri", pg.locator("#gen-suggestions li").count() == 6)
+    pg.click("#gen-new"); check("yenile yeni parola üretir", t("#gen-pw") != first)
+    pg.fill("#gen-words", "4"); pg.dispatch_event("#gen-words", "input")
+    check("kelime sayısı 4", len(t("#gen-pw").split("-")) == 4 and t("#gen-words-val") == "4", t("#gen-pw"))
+    pg.select_option("#gen-list", "en"); pg.select_option("#gen-sep", "space"); pg.uncheck("#gen-digit")
+    check("İngilizce, boşluklu, rakamsız: 51,7 bit", bool(re.fullmatch(r"[A-Z][a-z]+( [A-Z][a-z]+){3}", t("#gen-pw"))) and t("#gen-meta").startswith("51,7 bit"), t("#gen-pw") + " | " + t("#gen-meta"))
+    pg.check("input[name=gen-kind][value=chars]")
+    check("rastgele karakter 20", len(t("#gen-pw")) == 20 and pg.is_hidden("#gen-opts-words"), t("#gen-pw"))
+    pg.fill("#gen-len", "32"); pg.dispatch_event("#gen-len", "input"); pg.uncheck("#gen-sym")
+    check("32 karakter, simgesiz", bool(re.fullmatch(r"[A-Za-z0-9]{32}", t("#gen-pw"))), t("#gen-pw"))
+    sug = pg.locator("#gen-suggestions .pw").first.inner_text(); pg.locator("#gen-suggestions .pw").first.click()
+    check("öneri seçilince ana parola olur", t("#gen-pw") == sug)
+    pg.click("#gen-copy"); pg.wait_for_timeout(100)
+    clip = pg.evaluate("navigator.clipboard.readText().catch(() => null)")
+    check("kopyala panoya yazar", clip == sug and t("#gen-copy") == "Kopyalandı", clip)
+    check("adres #olustur", pg.evaluate("location.hash") == "#olustur")
+    shot(pg, "shot-generator.png")
+    pg.focus("#tab-gen"); pg.keyboard.press("ArrowLeft")
+    check("ok tuşuyla sekme geçişi", pg.is_visible("#panel-meter") and pg.evaluate("document.activeElement.id") == "tab-meter")
+    pg.click("#tab-gen"); pg.click("#tab-meter")
+    check("ölçüm sekmesine dönüş", pg.is_visible("#panel-meter") and pg.evaluate("location.hash") == "")
+    hp = b.new_context(locale="tr-TR").new_page(); hp.goto(URL + "#olustur"); hp.wait_for_selector("#loading", state="hidden")
+    check("#olustur bağlantısı oluşturucuyu açar", hp.is_visible("#panel-gen") and hp.inner_text("#gen-pw").strip() != "")
+    hp.context.close()
 
     # blob: Worker'ın sayfanın kendi betiğinden üretilen yerel adresidir; ağa çıkmaz.
     local = lambda u: u.startswith("file:") or u.startswith("blob:")

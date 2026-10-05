@@ -127,6 +127,28 @@ li { margin-bottom: .4rem; }
 footer { margin-top: 2.5rem; color: var(--muted); font-size: .85rem; }
 footer a { color: inherit; }
 footer pre { white-space: pre-wrap; overflow-wrap: anywhere; font: .78rem/1.45 var(--mono); max-height: 22rem; overflow: auto; border: 1px solid var(--rule); border-radius: 4px; padding: .75rem; margin: .6rem 0 0; }
+/* Sekmeler */
+.tabs { display: flex; gap: .25rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.5rem; }
+.tabs [role="tab"] { border: 0; border-bottom: 3px solid transparent; border-radius: 4px 4px 0 0; background: none; color: var(--muted); padding: .6rem .9rem; margin-bottom: -1px; }
+.tabs [role="tab"][aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+/* Parola oluşturucu */
+.gen-box { display: flex; flex-wrap: wrap; gap: .5rem; align-items: stretch; margin-top: 1.25rem; }
+#gen-pw { flex: 1 1 18rem; min-height: 3.4rem; display: flex; align-items: center; padding: .6rem .8rem; font-size: 1.2rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; overflow-wrap: anywhere; user-select: all; }
+.gen-actions { display: flex; gap: .5rem; }
+.gen-meta { margin: .6rem 0 0; display: flex; flex-wrap: wrap; gap: .3rem .8rem; align-items: baseline; }
+.gen-meta .bits { font-family: var(--mono); font-weight: 600; font-size: 1.15rem; }
+.gen-opts input[type="range"] { width: 11rem; accent-color: var(--accent); }
+.gen-opts select { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: .45rem .5rem; }
+.opts label.check { display: flex; align-items: center; gap: .45rem; font-weight: 400; }
+.opts label.check input { width: auto; accent-color: var(--accent); margin: 0; }
+.suggestions { list-style: none; padding: 0; margin: .4rem 0 0; max-width: none; }
+.suggestions li { display: flex; gap: .5rem; align-items: center; margin: 0; padding: .35rem 0; border-bottom: 1px solid var(--rule); }
+.suggestions .pw { flex: 1; font-family: var(--mono); overflow-wrap: anywhere; text-align: left; border: 0; background: none; padding: .25rem 0; font-weight: 400; }
+.suggestions .pw:hover { color: var(--accent); }
+.suggestions .copy { padding: .3rem .7rem; font-size: .85rem; }
+.copied { color: var(--k-en); }
+
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .seg { transition: none; } }
 @media (max-width: 30rem) { #bits { font-size: 2.1rem; } main { padding-top: 1.5rem; } }
@@ -135,8 +157,68 @@ footer pre { white-space: pre-wrap; overflow-wrap: anywhere; font: .78rem/1.45 v
 <body>
 <main>
   <h1>parola_entropi</h1>
-  <p class="lede">Bir parolanın tahmin edilmesi için kaç deneme gerektiğini hesaplar. Hesap tarayıcınızda yapılır: yazdığınız parola bilgisayarınızdan çıkmaz, hiçbir yere kaydedilmez. Sayfayı kaydedip çevrimdışı da kullanabilirsiniz.</p>
+  <p class="lede">Bir parolanın tahmin edilmesi için kaç deneme gerektiğini hesaplar ve güçlü parolalar oluşturur. Her şey tarayıcınızda yapılır: parolalar bilgisayarınızdan çıkmaz, hiçbir yere kaydedilmez. Sayfayı kaydedip çevrimdışı da kullanabilirsiniz.</p>
 
+  <div class="tabs" role="tablist" aria-label="Araçlar">
+    <button type="button" role="tab" id="tab-meter" aria-controls="panel-meter" aria-selected="true">Parolamı ölç</button>
+    <button type="button" role="tab" id="tab-gen" aria-controls="panel-gen" aria-selected="false" tabindex="-1">Parola oluştur</button>
+  </div>
+
+  <div id="panel-gen" role="tabpanel" aria-labelledby="tab-gen" hidden>
+  <section class="entry" aria-label="Parola oluşturucu">
+    <fieldset style="margin-top:0">
+      <legend>Parola türü</legend>
+      <div class="modes">
+        <label><input type="radio" name="gen-kind" value="words" checked> Akılda kalır (kelimeler)</label>
+        <label><input type="radio" name="gen-kind" value="chars"> Rastgele karakterler</label>
+      </div>
+    </fieldset>
+
+    <div class="gen-box">
+      <output id="gen-pw" class="mono" aria-live="polite" aria-label="Oluşturulan parola"></output>
+      <div class="gen-actions">
+        <button id="gen-copy" type="button" class="primary">Kopyala</button>
+        <button id="gen-new" type="button">Yenile</button>
+      </div>
+    </div>
+    <p id="gen-meta" class="gen-meta"></p>
+
+    <div id="gen-opts-words" class="opts gen-opts">
+      <label><span>Kelime sayısı: <span id="gen-words-val"></span></span><input id="gen-words" type="range" min="3" max="10" value="5"></label>
+      <label>Kelime listesi
+        <select id="gen-list">
+          <option value="tr" selected>Türkçe (2.048 kelime)</option>
+          <option value="en">İngilizce, EFF (7.776 kelime)</option>
+        </select>
+      </label>
+      <label>Ayraç
+        <select id="gen-sep">
+          <option value="hyphen" selected>Tire (-)</option>
+          <option value="space">Boşluk</option>
+          <option value="period">Nokta (.)</option>
+          <option value="underscore">Alt çizgi (_)</option>
+          <option value="comma">Virgül (,)</option>
+          <option value="digits">Rastgele rakam</option>
+          <option value="digitsSymbols">Rastgele rakam ve simge</option>
+        </select>
+      </label>
+      <label class="check"><input id="gen-cap" type="checkbox" checked> Büyük harfle başlat</label>
+      <label class="check"><input id="gen-digit" type="checkbox" checked> Kelimelere rakam ekle</label>
+    </div>
+    <div id="gen-opts-chars" class="opts gen-opts" hidden>
+      <label><span>Uzunluk: <span id="gen-len-val"></span></span><input id="gen-len" type="range" min="8" max="64" value="20"></label>
+      <label class="check"><input id="gen-upper" type="checkbox" checked> Büyük harf</label>
+      <label class="check"><input id="gen-num" type="checkbox" checked> Rakam</label>
+      <label class="check"><input id="gen-sym" type="checkbox" checked> Simge</label>
+    </div>
+
+    <h2 class="sub">Başka öneriler</h2>
+    <ul id="gen-suggestions" class="suggestions"></ul>
+    <p class="small muted" style="margin-top:.75rem">Parolalar tarayıcınızın güvenli rastgele sayı üreteciyle (<span class="mono">crypto.getRandomValues</span>) oluşturulur. Entropi tahmin değildir: üretecin seçenekleri üzerinden tam olarak hesaplanır. Akılda kalır parolalarda Türkçe karakterler kullanılmaz (ağaç yerine agac); böylece her klavyede yazılabilir.</p>
+  </section>
+  </div>
+
+  <div id="panel-meter" role="tabpanel" aria-labelledby="tab-meter">
   <section class="entry" aria-label="Parola girişi">
     <label class="main" for="pw">Parola</label>
     <div class="field">
@@ -205,6 +287,7 @@ footer pre { white-space: pre-wrap; overflow-wrap: anywhere; font: .78rem/1.45 v
     <button id="breach-btn" type="button" class="primary" disabled>Sızıntı kayıtlarında ara</button>
     <p class="small muted" style="margin-top:.6rem">Bu sayfanın ağa çıktığı tek yer burasıdır ve yalnızca düğmeye bastığınızda çalışır.</p>
   </section>
+  </div>
 
   <section aria-label="Sınırlar">
     <details style="margin-top:0">
@@ -215,6 +298,7 @@ footer pre { white-space: pre-wrap; overflow-wrap: anywhere; font: .78rem/1.45 v
         <li>Parça sayısı arttıkça zxcvbn modelinin bir alt sınırı vardır: üç parçalı bir parola, parçaların hepsi tanınsa bile yaklaşık 27 bitin altına inmez.</li>
         <li>Sızıntı cezası, sızıntı sayısından sıra tahmini yapan kaba bir modeldir (Zipf, en çok 25 bit).</li>
         <li>Rastgele seçeneklerdeki formül, parolanın gerçekten bir üreteçten çıktığını varsayar.</li>
+        <li>Parola oluşturucudaki entropi, saldırganın hangi listeyi ve ayarları kullandığınızı bildiğini varsayar; gizlilik yalnızca rastgele seçimlerden gelir. Türkçe liste elle derlenmiştir (2.048 kelime).</li>
       </ul>
     </details>
   </section>

@@ -45,6 +45,13 @@ for (const name of [...bundled].sort()) {
   if (!files.length) throw new Error(`${name}: lisans dosyası bulunamadı`);
   for (const f of files) notices += `\n--- ${f} ---\n${readFileSync(path.join(dir, f), 'utf8').trim()}\n`;
 }
+// Parola oluşturucunun İngilizce kelime listesi, @zxcvbn-ts/language-common içindeki EFF listesidir.
+// Paketin lisans dosyası EFF'yi anmadığı için listenin kendi atfı ayrıca eklenir.
+notices += `\n${'='.repeat(72)}\nEFF Large Wordlist (parola oluşturucu, İngilizce liste)\n${'='.repeat(72)}\n`
+  + '\nKaynak: Electronic Frontier Foundation, "EFF\'s New Wordlists for Random Passphrases" (2016).\n'
+  + 'https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases\n'
+  + 'Lisans: Creative Commons Attribution 3.0 United States (CC BY 3.0 US).\n'
+  + 'https://creativecommons.org/licenses/by/3.0/us/\n';
 const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const js = out.outputFiles[0].text.trim().replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--');

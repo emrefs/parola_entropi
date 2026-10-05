@@ -1,0 +1,42 @@
+# Sıfatlar (olumlu ve nötr)
+güzel hoş şirin tatlı sevimli zarif narin ince kalın uzun kısa geniş dar derin sığ yüksek alçak
+büyük küçük minik ufak kocaman devasa iri ufacık hafif ağır yumuşak sert pürüzsüz kaygan
+sıcak ılık serin soğuk taze yeni eski genç yaşlı modern klasik antika sade süslü parlak mat
+aydınlık karanlık açık koyu canlı solgun renkli renksiz şeffaf bulanık berrak duru temiz pırıl
+hızlı yavaş çevik atik tembel çalışkan becerikli usta akıllı zeki bilge kurnaz uyanık dikkatli
+sakin durgun hareketli neşeli mutlu keyifli şen güler yüzlü cana yakın sıcakkanlı nazik kibar
+cömert eli açık dürüst sadık vefalı cesur yiğit gözüpek atılgan meraklı hevesli istekli azimli
+sabırlı sakin uysal yumuşak başlı sevecen şefkatli anlayışlı hoşgörülü alçakgönüllü mütevazı
+güçlü kuvvetli sağlam dayanıklı esnek ince narin kırılgan dengeli düzenli titiz özenli kusursuz
+basit kolay zor karmaşık ilginç şaşırtıcı harika muhteşem mükemmel olağanüstü eşsiz nadir
+değerli kıymetli pahalı ucuz bedava bol kıt zengin varlıklı mütevazı sade gösterişli görkemli
+tatlı ekşi acı tuzlu baharatlı lezzetli nefis leziz kokulu mis gibi buram buram çıtır gevrek
+yumuşacık pamuk gibi ipeksi kadifemsi tüylü pürüzlü dikenli sivri küt yuvarlak köşeli düz eğri
+kıvrık dalgalı dik yatay dikey çapraz paralel simetrik ortak tek çift yarım tam bütün
+uzak yakın komşu içeri dışarı yukarı aşağı ileri geri sağ sol orta merkez kenar köşe
+sessiz sesli gürültülü yumuşak sesli melodik ahenkli uyumlu tutarlı mantıklı akla yatkın
+ünlü tanınmış popüler gizli saklı açık seçik belirgin net bulanık silik hafif belli belirsiz
+yaz kış bahar güz sabahki akşamki geceki yazlık kışlık baharlık
+yeşilli mavili sarılı kırmızılı beyazlı
+
+# Fiiller (mastar)
+koşmak yürümek gezmek dolaşmak gitmek gelmek dönmek durmak beklemek oturmak kalkmak yatmak
+uyumak uyanmak dinlenmek çalışmak okumak yazmak çizmek boyamak söylemek konuşmak anlatmak
+dinlemek duymak görmek bakmak izlemek seyretmek gözlemek düşünmek anlamak bilmek öğrenmek
+öğretmek sormak cevaplamak yanıtlamak açıklamak göstermek bulmak aramak saklamak gizlemek
+açmak kapamak kapatmak kilitlemek taşımak götürmek getirmek vermek almak satmak ödemek
+yemek içmek pişirmek kızartmak haşlamak kaynatmak doğramak kesmek soymak karıştırmak tatmak
+yıkamak temizlemek silmek süpürmek ütülemek katlamak dikmek örmek bağlamak çözmek düğümlemek
+oynamak gülmek eğlenmek şarkı söylemek dans etmek zıplamak atlamak tırmanmak yüzmek dalmak
+uçmak süzülmek kaymak koşturmak sürmek binmek inmek çıkmak girmek geçmek aşmak dolaşmak
+kurmak yapmak inşa etmek yıkmak onarmak tamir etmek düzeltmek boyamak cilalamak parlatmak
+sevmek beğenmek özlemek hatırlamak unutmak hayal etmek düşlemek ummak inanmak güvenmek
+paylaşmak yardım etmek desteklemek korumak kollamak beslemek büyütmek yetiştirmek ekmek biçmek
+toplamak saymak hesaplamak ölçmek tartmak karşılaştırmak seçmek ayırmak birleştirmek eklemek
+başlamak bitirmek tamamlamak denemek başarmak kazanmak yenmek koşturmak yarışmak
+selamlamak karşılamak uğurlamak ağırlamak davet etmek kutlamak sevindirmek güldürmek
+fısıldamak bağırmak çağırmak seslenmek ıslık çalmak mırıldanmak şakımak ötmek havlamak
+miyavlamak kişnemek melemek böğürmek uçuşmak kanat çırpmak süzülmek konmak tünemek
+parlamak ışıldamak pırıldamak sönmek yanmak tutuşmak erimek donmak kaynamak buharlaşmak
+akmak damlamak süzülmek dolmak boşalmak taşmak esmek yağmak yağmak kar yağmak savrulmak
+büyümek gelişmek serpilmek filizlenmek çiçeklenmek açmak olgunlaşmak kurumak solmak

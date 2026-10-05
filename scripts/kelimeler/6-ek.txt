@@ -1,0 +1,52 @@
+# Ek kelimeler (tek kelime; bileşik ifade yok)
+adres ajans aktif alan alarm albüm alet alfabe ambalaj anahtar anket anlaşma antika arena arma
+arşiv asfalt atlas avize ayar aygıt bagaj bahis bakış balkon bant banyo baraj basamak baskı
+batarya bavul bebek bekçi bellek benzin beyin bidon bilet bilezik bina birim bisküvi bitki
+blok bobin bölge bölüm boru boya bulmaca bunker burgu cadde cephe cetvel ceviz çadır çakmak
+çanak çark çatı çekiç çerçeve çerez çeşit çeyrek çıkış çini çizgi çizim dalga damga davet defne
+dekor demet depo dergi devre dilek dilim dizi dolap doruk duvak dümen düdük düğme düğüm düzlem
+ekip ekran eldiven emlak engel erzak eskiz etiket evrak fanus fener fıçı fidan filo fincan fiyat
+form forum fotoğraf gazete gemi gidon gişe gölge gömlek gönder gözlük gravür güverte hamak
+hamur harç hasır hazine hediye hücre ilan ilaç iskele istif iz izci jeton kadeh kafes kafile
+kalıp kamp kanat kanepe kapak kaplan karavan karne kart kasa kase kask kayak kaynak kemer kepçe
+kervan kilit kitap koleksiyon kolon kombi konvoy kopya kordon koridor kostüm kova kovan köprü
+kulübe kumbara kupa kurdele kutu kuyu kumanda lamba levha liste lokum madalya mahzen makas
+maket mangal marka masa maske matara menü merdiven mesaj mevsim mimari mobilya model motor mozaik
+mühür müze nakış nişan numara ocak oda okul olta ölçek örgü örnek palet pano para parça paspas
+pasta patika pedal perde pervaz pist plaket plan poster pota puan pul radar rampa rapor ray
+rehber rozet saat sahne sandık saray sargı sayaç sayfa sehpa sepet sergi sıra sicim silah sinyal
+sistem siren sofra sopa sünger şamdan şapka şerit şilte şişe tabela tablo takvim tampon tapa tava
+tekne tel tepsi tezgah tıpa top torba tren tribün tuğla tül tünel turta uçurtma ufuk ulak uzay
+vagon valiz vapur vazo vida vitrin yaka yapı yastık yatak yay yazı yelek yelken yol yörünge
+yumak yüzük zarf zemin zil zincir zırh
+
+# Doğa ve yer (ek)
+alan bayır belde boğaz bucak burun çakıl çatal çayır çöl dağ delta dere düzlük eteğ geçit gölet
+hendek höyük kanyon kayalık kıyı koru koy kumsal kuytu mağara meşe obruk otlak ova patika pınar
+plato sahil sırt tepe vadi yamaç yayla yazı yurt bozkır step tundra tayga savan cengel cangıl
+orman koruluk fundalık çalılık sazlık bataklık tuzla kaplıca ılıca maden ocak kuyu sarnıç
+
+# Yiyecek ve mutfak (ek)
+armut ayva badem bal biber börek ceviz çilek çorba dut elma erik fındık fıstık havuç hurma incir
+karpuz kavun kayısı kiraz limon mantı muz nar portakal üzüm vişne zeytin yoğurt peynir pilav
+köfte kebap simit lokum helva tatlı reçel pekmez tahin susam kek turta pasta krep waffle tost
+sandviç hamburger pizza makarna erişte salata turşu sos çeşni nane kekik defne kimyon tarçın
+
+# Sıfat ve zarf (ek)
+acele ağır akıcı akıllı alçak anlık aydın bakımlı basit belirli benzer berrak beyaz bilinen
+boş bulanık canlı cesur çabuk çekici çevik çift çok dalgın derin dingin dolu doğal dürüst düz
+eğlenceli emin engin erken esnek eşit eşsiz geç geniş gerçek gizli görkemli güçlü güvenli hafif
+hızlı ılık ince ivedi kalıcı kararlı kesin kolay kuru kutlu küçük masmavi mavi minik mutlu nazik
+net neşeli olgun özel parlak pembe pratik rahat renkli sade sağlam sakin samimi sarı sıcak sıkı
+sıradan sivri soğuk sonsuz şanslı şık şirin tatlı taze temiz tok tuhaf uçsuz uygun uyanık
+uzak uzun yakın yalın yavaş yeni yeşil yoğun yuvarlak yumuşak yüce zarif zengin zinde
+
+# Fiil (ek)
+anmak aramak artmak asmak atmak avlamak ayırmak bağlamak basmak batmak bekletmek benzemek
+bilemek bölmek budamak çakmak çalmak çekmek çevirmek çizmek çözmek damgalamak denemek dikmek
+dinlemek dizmek doldurmak dökmek dövmek dürmek eğmek ekmek elemek ermek eşlemek evirmek
+gezinmek giymek gömmek güzelleşmek ısıtmak ıslatmak işlemek itmek kalmak kaplamak kapmak
+kazmak kesmek kırmak koklamak kollamak kopmak koymak kurmak kurtarmak kuşanmak okşamak ovmak
+örtmek özlemek pişirmek sarmak sarılmak savurmak serpmek sıçramak sıkmak silmek sokmak
+sulamak süslemek şaşırmak takmak tartmak taşımak tutmak uçurmak ulaşmak uzanmak uzatmak
+yakmak yaklaşmak yarışmak yaşamak yazmak yıkamak yollamak yontmak yormak yükselmek yürümek

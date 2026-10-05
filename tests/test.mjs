@@ -111,4 +111,76 @@ for (const [name, cs] of Object.entries(sets)) for (const len of [8, 12, 16, 24]
 for (const p of ['Password1!', 'Galatasaray1905', 'qwerty123456', 'cumhuriyet1923']) {
   assert.ok(E.looksPatterned(E.patternAnalysis(p), E.randomCharBits(p, E.detectPool(p).size), p.length), p);
 }
+// ---------- Parola oluşturucu ----------
+const G = await import('../src/generator.js');
+// Kelime listeleri: boyut, tekillik, biçim; ASCII'ye çevrilince kaba ya da istenmeyen kelime yok
+const trList = G.WORDLISTS.tr.words;
+assert.equal(trList.length, 2048);
+assert.equal(new Set(trList).size, trList.length);
+assert.ok(trList.every((w) => /^[a-z]{4,8}$/.test(w)), 'Türkçe liste biçimi');
+for (const w of ['sikmak', 'siki', 'pisi', 'fagot', 'parola', 'sifre', 'zili', 'batimi']) assert.ok(!trList.includes(w), w);
+assert.equal(G.WORDLISTS.en.words.length, 7776);
+assert.equal(new Set(G.WORDLISTS.en.words).size, 7776);
+
+// randomBelow: üst sınırı aşan değerler reddedilir (yanlılık yok)
+// n = 3 için 2^32 mod 3 = 1, yani yalnızca 2^32 - 1 reddedilir.
+const seq = (vals) => { const f = (buf) => { buf[0] = vals[f.calls++]; return buf; }; f.calls = 0; return f; };
+const fill = seq([2 ** 32 - 1, 7]);
+assert.equal(G.randomBelow(3, fill), 1, 'reddetme örneklemesi');
+assert.equal(fill.calls, 2, 'en büyük değer reddedilmeli');
+assert.equal(G.randomBelow(3, seq([2 ** 32 - 2])), (2 ** 32 - 2) % 3, 'sınırın altı kabul edilmeli');
+// Gerçek kaynakla kaba eşit dağılım denetimi (ki-kare, 6 serbestlik derecesi, %0,1 eşiği 22,46)
+{
+  const n = 7, N = 70000, counts = new Array(n).fill(0);
+  for (let k = 0; k < N; k++) counts[G.randomBelow(n)]++;
+  const chi = counts.reduce((s, c) => s + (c - N / n) ** 2 / (N / n), 0);
+  assert.ok(chi < 22.46, `randomBelow dağılımı: ki-kare ${chi.toFixed(1)}`);
+}
+
+// Her kümeden en az bir karakter şartıyla sayım: küçük örnekte tek tek sayarak doğrula
+{
+  const sets = ['ab', 'XY', '12'];
+  const all = sets.join('');
+  let brute = 0;
+  const walk = (s) => {
+    if (s.length === 4) { if (sets.every((set) => [...s].some((c) => set.includes(c)))) brute++; return; }
+    for (const c of all) walk(s + c);
+  };
+  walk('');
+  assert.equal(G.countCharPasswords(4, sets), BigInt(brute));
+}
+assert.ok(Math.abs(G.log2Big(2n ** 200n * 3n) - (200 + Math.log2(3))) < 1e-9, 'log2Big');
+
+// Rastgele karakterler: uzunluk, seçilen her türden en az bir karakter, tam entropi
+for (const opts of [{ length: 8 }, { length: 20 }, { length: 12, symbols: false }, { length: 16, upper: false, digits: false, symbols: false }]) {
+  for (let k = 0; k < 200; k++) {
+    const r = G.randomChars(opts);
+    const sets = G.charSets(opts);
+    assert.equal(r.password.length, opts.length);
+    assert.ok(sets.every((s) => [...r.password].some((c) => s.includes(c))), r.password);
+    assert.ok([...r.password].every((c) => sets.join('').includes(c)), r.password);
+  }
+}
+const allOn = G.randomChars({ length: 20 }).bits;
+assert.ok(allOn < 20 * Math.log2(75) && allOn > 20 * Math.log2(75) - 1, `20 karakter: ${allOn}`);
+assert.ok(Math.abs(G.randomChars({ length: 16, upper: false, digits: false, symbols: false }).bits - 16 * Math.log2(26)) < 1e-9);
+
+// Akılda kalır: biçim ve entropi
+{
+  const r = G.memorable({ words: 5, list: 'tr', capitalize: true, digits: true, separator: 'hyphen' });
+  assert.match(r.password, /^[A-Z][a-z]{3,7}\d(-[A-Z][a-z]{3,7}\d){4}$/, r.password);
+  assert.ok(Math.abs(r.bits - 5 * (11 + Math.log2(10))) < 1e-9);
+  const parts = r.password.split('-').map((p) => p.slice(0, -1).toLowerCase());
+  assert.ok(parts.every((p) => trList.includes(p)), r.password);
+  const e = G.memorable({ words: 6, list: 'en', capitalize: false, digits: false, separator: 'space' });
+  assert.equal(e.password.split(' ').length, 6);
+  assert.ok(Math.abs(e.bits - 6 * Math.log2(7776)) < 1e-9);
+  const s = G.memorable({ words: 4, list: 'tr', capitalize: false, digits: false, separator: 'digitsSymbols' });
+  assert.ok(Math.abs(s.bits - (4 * 11 + 3 * Math.log2(23))) < 1e-9);
+  assert.match(s.password, /^[a-z]+[0-9!#$%&*+\-=?@^_][a-z]+[0-9!#$%&*+\-=?@^_][a-z]+[0-9!#$%&*+\-=?@^_][a-z]+$/, s.password);
+}
+// Varsayılan ayarlar en az 60 bit vermeli
+assert.ok(G.memorableBits({}) >= 60 && G.randomChars({}).bits >= 60);
+console.log('parola oluşturucu: örnek', G.memorable().password, G.randomChars().password);
+
 console.log('TÜM TESTLER GEÇTİ');

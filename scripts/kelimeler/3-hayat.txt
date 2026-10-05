@@ -1,0 +1,46 @@
+# Meslekler, insanlar
+öğretmen öğrenci hoca usta çırak kalfa doktor hekim hemşire eczacı veteriner dişçi cerrah ebe
+mühendis mimar avukat hakim savcı noter polis itfaiyeci asker pilot kaptan denizci gemici balıkçı
+çiftçi çoban bahçıvan aşçı garson fırıncı kasap manav bakkal berber kuaför terzi ayakkabıcı
+saatçi kuyumcu marangoz demirci tesisatçı elektrikçi boyacı badanacı duvarcı camcı çilingir
+şoför sürücü kurye postacı bekçi kapıcı temizlikçi kasiyer tezgahtar satıcı tüccar esnaf yazar
+şair ressam heykeltıraş müzisyen şarkıcı besteci kemancı piyanist davulcu dansçı oyuncu aktör
+yönetmen senarist fotoğrafçı gazeteci muhabir editör yayıncı çevirmen tercüman kütüphaneci
+bilim insanı araştırmacı kimyager fizikçi biyolog jeolog astronom matematikçi tarihçi arkeolog
+mimar tasarımcı grafiker yazılımcı programcı teknisyen tamirci pilot hostes rehber turist gezgin
+kaşif dağcı sporcu atlet koşucu yüzücü güreşçi boksör hakem antrenör kaleci forvet kaptan
+anne baba ebeveyn çocuk bebek kardeş abla ağabey dede nine nene babaanne anneanne torun amca dayı
+hala teyze kuzen yeğen eş nişanlı gelin damat komşu arkadaş dost yoldaş ahbap misafir konuk ev sahibi
+genç yaşlı ihtiyar delikanlı kız oğlan çocukluk gençlik insan kişi birey toplum halk millet
+aile akraba soy nesil kuşak takım ekip grup topluluk kalabalık
+
+# Ulaşım, şehir, mekan
+araba otomobil otobüs minibüs dolmuş taksi kamyon kamyonet tır traktör bisiklet motosiklet
+scooter kaykay paten kızak tren vagon lokomotif metro tramvay teleferik füniküler vapur feribot
+gemi tekne yat yelkenli kayık sandal sal denizaltı uçak helikopter balon zeplin roket uzay mekiği
+istasyon durak gar terminal havaalanı havalimanı pist hangar liman iskele rıhtım otopark garaj
+benzinlik yol otoyol otoban kavşak köprü tünel geçit kaldırım bisiklet yolu trafik işaret lamba
+okul lise üniversite kampüs kütüphane müze sergi galeri tiyatro sinema opera konser salonu stadyum
+spor salonu havuz park bahçe hayvanat bahçesi lunapark sirk panayır pazar çarşı market bakkal
+fırın eczane hastane klinik postane banka belediye karakol adliye okul kreş yurt otel pansiyon
+kamp kervansaray han hamam cami kilise sinagog türbe kale burç sur hisar kule saat kulesi anıt
+heykel çeşme meydan çarşı bedesten kapalıçarşı dükkan mağaza butik atölye fabrika imalathane
+depo ambar ofis büro şirket plaza gökdelen site köşk saray
+
+# Okul, bilim, teknoloji
+kitap defter kalem kurşun kalem dolma kalem tükenmez silgi kalemtıraş cetvel gönye pergel iletki
+hesap makinesi tahta tebeşir sıra masa çanta dosya klasör zımba ataç bant yapıştırıcı makas
+sözlük ansiklopedi atlas harita küre roman öykü hikaye masal şiir destan efsane fıkra bilmece
+bulmaca deneme makale dergi gazete mektup kartpostal pul zarf not karne diploma sınav ödev proje
+ders konu sınıf okul müdür teneffüs zil bayrak marş kantin bahçe laboratuvar deney mikroskop
+teleskop dürbün büyüteç mıknatıs pusula termometre barometre terazi kantar metre cetvel saat
+kronometre takvim ajanda bilgisayar dizüstü tablet telefon ekran klavye fare yazıcı tarayıcı
+hoparlör kulaklık mikrofon kamera fotoğraf video film müzik oyun program yazılım donanım işlemci
+bellek disk kablo modem internet ağ site sayfa bağlantı ileti mesaj posta şifre parola kod robot
+uydu anten sinyal radar lazer pil batarya enerji elektrik akım voltaj devre motor makine dişli
+kaldıraç makara yay vida somun cıvata çivi çekiç tornavida pense anahtar testere matkap zımpara
+rende keski eğe mengene levye kürek kazma tırmık çapa orak tırpan balta nacak bel küskü el arabası
+atom molekül hücre gen enerji kuvvet hız ivme kütle ağırlık hacim yoğunluk basınç sıcaklık ısı
+ışık ses dalga frekans renk tayf mercek prizma ayna gölge yansıma kırılma çekim yörünge
+sayı rakam toplam fark çarpım bölüm kesir ondalık yüzde oran orantı denklem formül grafik tablo
+çizgi nokta açı üçgen kare dikdörtgen daire çember elips küp küre silindir koni piramit prizma
