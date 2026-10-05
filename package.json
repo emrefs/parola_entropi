@@ -1,5 +1,5 @@
 {
-  "name": "parola-entropi",
+  "name": "parola_entropi",
   "version": "0.2.2",
   "private": true,
   "license": "MIT",
@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node build.mjs",
     "test": "node tests/test.mjs",
-    "e2e": "python3 tests/e2e.py"
+    "e2e": "node tests/run-e2e.mjs"
   },
   "dependencies": {
     "@zxcvbn-ts/core": "4.2.0",

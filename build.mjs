@@ -1,5 +1,5 @@
 // src/ altındaki her şeyi tek bir HTML dosyasında birleştirir: dist/index.html
-// (GitHub Pages) ve aynı dosyanın kopyası dist/parola-entropi.html (indirip çevrimdışı kullanmak için).
+// (GitHub Pages) ve aynı dosyanın kopyası dist/parola_entropi.html (indirip çevrimdışı kullanmak için).
 import { build } from 'esbuild';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
@@ -36,7 +36,7 @@ for (const input of Object.keys(out.metafile.inputs)) {
   if (m) bundled.add(m[1]);
 }
 const bar = '='.repeat(72);
-let notices = `${bar}\nparola-entropi ${versions.app}\n${bar}\n\n--- LICENSE ---\n${read('LICENSE').trim()}\n\n`
+let notices = `${bar}\nparola_entropi ${versions.app}\n${bar}\n\n--- LICENSE ---\n${read('LICENSE').trim()}\n\n`
   + 'Bu sayfa ayrıca aşağıdaki açık kaynak yazılım ve verileri içerir.\n';
 for (const name of [...bundled].sort()) {
   const dir = path.join(root, 'node_modules', name);
@@ -57,7 +57,7 @@ const html = read('src', 'template.html')
 const dist = path.join(root, 'dist');
 if (!existsSync(dist)) mkdirSync(dist);
 writeFileSync(path.join(dist, 'index.html'), html);
-writeFileSync(path.join(dist, 'parola-entropi.html'), html);
+writeFileSync(path.join(dist, 'parola_entropi.html'), html);
 writeFileSync(path.join(dist, 'THIRD_PARTY_NOTICES.txt'), notices);
 console.log(`dist/index.html: ${(Buffer.byteLength(html) / 1e6).toFixed(2)} MB, sürüm ${versions.app}${versions.commit ? ' @ ' + versions.commit : ''}`);
 console.log(`Paketlenen üçüncü taraf paketler: ${[...bundled].sort().join(', ')}`);

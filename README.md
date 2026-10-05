@@ -1,12 +1,12 @@
-# Parola ölçer
+# parola_entropi
 
 Bir parolanın tahmin edilmesi için kaç deneme gerektiğini hesaplayan, tek dosyalık bir
 araç. Hesap tamamen tarayıcıda yapılır; Türkçe kelimeleri, Türkçe klavye desenlerini ve
 yerel kalıpları tanır.
 
-**Canlı sürüm:** https://KULLANICI.github.io/parola-entropi/
+**Canlı sürüm:** https://emrefs.github.io/parola_entropi/
 
-**Çevrimdışı kullanım:** https://KULLANICI.github.io/parola-entropi/parola-entropi.html
+**Çevrimdışı kullanım:** https://emrefs.github.io/parola_entropi/parola_entropi.html
 dosyasını indirip tarayıcıda açın. Dosya kendi kendine yeter; kurulum gerekmez.
 
 ## Ne yapar
@@ -52,7 +52,7 @@ Node.js 22 ile test edilmiştir.
 
     npm ci
     npm test             # birim testleri
-    npm run build        # dist/index.html ve dist/parola-entropi.html üretir
+    npm run build        # dist/index.html ve dist/parola_entropi.html üretir
     npm run e2e          # tarayıcı testleri; önce: pip install playwright && playwright install chromium
 
 | Dosya | İçerik |
