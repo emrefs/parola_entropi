@@ -250,7 +250,7 @@ $('breach-btn').addEventListener('click', async () => {
 
 // Sözlükleri ilk boyamadan sonra hazırla
 const v = __VERSIONS__;
-$('versions').textContent = `Parola ölçer ${v.app}. zxcvbn-ts ${v.core}; sözlükler: ortak ${v.common}, İngilizce ${v.en}, Türkçe ${v.tr}. Derleme: ${v.built}${v.commit ? `, ${v.commit}` : ''}. `;
+$('versions').textContent = `parola_entropi ${v.app}. zxcvbn-ts ${v.core}; sözlükler: ortak ${v.common}, İngilizce ${v.en}, Türkçe ${v.tr}. Derleme: ${v.built}${v.commit ? `, ${v.commit}` : ''}. `;
 if (v.repo) {
   const a = el('a', '', 'Kaynak kod');
   a.href = v.repo;

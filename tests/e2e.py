@@ -118,7 +118,7 @@ with sync_playwright() as p:
     other = [u for u in reqs if not u.startswith("file:") and "api.pwnedpasswords.com/range/" not in u and "example.com" not in u]
     check("beklenmeyen ağ isteği yok", not other, other)
     stored = pg.evaluate("[localStorage.length, sessionStorage.length, document.cookie]")
-    check("açık kaynak bildirimleri sayfada", "OpenSubtitles" in pg.text_content("#notices") and "Dropbox" in pg.text_content("#notices") and pg.text_content("#notices").lstrip("=\n").startswith("parola-entropi") and "MIT License" in pg.text_content("#notices"))
+    check("açık kaynak bildirimleri sayfada", "OpenSubtitles" in pg.text_content("#notices") and "Dropbox" in pg.text_content("#notices") and pg.text_content("#notices").lstrip("=\n").startswith("parola_entropi") and "MIT License" in pg.text_content("#notices"))
     check("hiçbir şey saklanmıyor", stored == [0, 0, ""], stored)
 
     # koyu tema ve mobil
