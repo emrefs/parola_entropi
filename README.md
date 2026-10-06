@@ -1,10 +1,12 @@
 # parola_entropi
 
-Bir parolanın tahmin edilmesi için kaç deneme gerektiğini hesaplayan, tek dosyalık bir
-araç. Hesap tamamen tarayıcıda yapılır; Türkçe kelimeleri, Türkçe klavye desenlerini ve
-yerel kalıpları tanır.
+Bir parolanın tahmin edilmesi için kaç deneme gerektiğini hesaplayan ve güçlü parolalar
+oluşturan, tek dosyalık bir araç. Her şey tarayıcıda yapılır; Türkçe kelimeleri, Türkçe
+klavye desenlerini ve yerel kalıpları tanır.
 
 **Canlı sürüm:** https://emrefs.github.io/parola_entropi/
+
+**Parola oluşturucu:** https://emrefs.github.io/parola_entropi/#olustur
 
 **Çevrimdışı kullanım:** https://emrefs.github.io/parola_entropi/parola_entropi.html
 dosyasını indirip tarayıcıda açın. Dosya kendi kendine yeter; kurulum gerekmez.
@@ -23,6 +25,10 @@ dosyasını indirip tarayıcıda açın. Dosya kendi kendine yeter; kurulum gere
   kayıtlarında arar ve parola sızmışsa değeri düşürür.
 - **Kişisel bilgiler.** Ad, doğum yılı gibi kelimeler verilirse parolada geçenleri
   tahmin edilmiş sayar.
+- **Parola oluşturucu.** Akılda kalır parolalar (Türkçe 2.048 ya da İngilizce EFF 7.776
+  kelimelik listeden; `Agac4-Konser6-Granit1-...`) ve rastgele karakterli parolalar üretir,
+  altı öneri daha sunar. Rastgelelik `crypto.getRandomValues`'tan gelir, her seçim eşit
+  olasılıklıdır. Entropi tahmin edilmez, üretecin seçenekleri üzerinden tam hesaplanır.
 
 ## Gizlilik ve ağ davranışı
 
@@ -48,6 +54,8 @@ dosyasını indirip tarayıcıda açın. Dosya kendi kendine yeter; kurulum gere
   parçaların hepsi tanınsa bile yaklaşık 27 bitin altına inmez.
 - Sızıntı cezası, sızıntı sayısından sıra tahmini yapan kaba bir modeldir.
 - Kırılma süreleri mertebe düzeyindedir.
+- Oluşturucunun entropisi, saldırganın kelime listesini ve ayarları bildiğini varsayar.
+  Türkçe liste elle derlenmiştir; Türkçe karakterler ASCII'ye çevrilir (ağaç → agac).
 
 ## Geliştirme
 
@@ -64,6 +72,9 @@ Node.js 22 ile test edilmiştir.
 | `src/keyboards.js` | Türkçe Q ve F klavye komşuluk tabloları ve üreteci |
 | `src/tr-extra.js` | Elle derlenmiş Türkçe ek sözlükler |
 | `src/ui.js`, `src/template.html` | Arayüz, sayfa iskeleti ve stiller |
+| `src/generator.js`, `src/generator-ui.js` | Parola oluşturucu: rastgelelik, entropi hesabı ve arayüz |
+| `src/wordlist-tr.js` | Türkçe parola kelime listesi (`scripts/make-wordlist-tr.mjs` üretir) |
+| `scripts/kelimeler/` | Türkçe listenin elle seçilmiş kaynak kelimeleri, konulara göre |
 | `src/main.js`, `src/analyzer.js` | Giriş noktası; desen analizini Web Worker'da çalıştırır, Worker yoksa sayfada |
 | `build.mjs` | Her şeyi tek HTML dosyasında birleştirir, CSP özetini ve lisans bildirimlerini yazar |
 | `tests/` | Birim testleri (`test.mjs`) ve tarayıcı testleri (`e2e.py`) |
@@ -73,6 +84,13 @@ Node.js 22 ile test edilmiştir.
 `src/tr-extra.js` içindeki listelere küçük harfle ve Türkçe karakterlerle giriş ekleyin.
 Türkçe karaktersiz yazımlar otomatik üretilir. Listeler "en olası önce" sıralıdır; sıra,
 tahmin sayısı olarak kullanılır. Sonra `npm test && npm run build` çalıştırın.
+
+### Oluşturucunun Türkçe kelime listesi
+
+Kelimeler `scripts/kelimeler/*.txt` dosyalarındadır (Türkçe karakterlerle, tek kelime).
+`node scripts/make-wordlist-tr.mjs --report` listeyi yeniden üretir: kelimeleri ASCII'ye
+çevirir, 4-8 harf ve tekil olanları alır, dışlama listesindekileri (kaba ya da istenmeyen
+yazımlar, bileşik ifade parçaları) atar ve en yaygın 2'nin kuvveti kadar kelimeyi seçer.
 
 ## Yayınlama
 
